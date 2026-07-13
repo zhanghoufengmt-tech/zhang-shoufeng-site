@@ -124,7 +124,7 @@ export default function App() {
   };
 
   return (
-    <section className="relative h-screen w-full overflow-hidden bg-black">
+    <section className="relative h-[100svh] w-full overflow-hidden bg-black">
       <audio ref={audioRef} src={bgmSource} autoPlay loop preload="auto" />
 
       <div className="absolute inset-0 z-0">
@@ -150,7 +150,7 @@ export default function App() {
         aria-hidden="true"
       />
 
-      <div className="relative z-[2] flex h-full flex-col px-5 py-5 sm:px-8 sm:py-6 lg:px-12">
+      <div className="relative z-[2] flex h-full flex-col px-4 py-4 sm:px-8 sm:py-6 lg:px-12">
         <nav className="flex items-center justify-between">
           <a className="text-xl italic text-white sm:text-2xl" href="/" aria-label={brandLabel}>
             {brandLabel}
@@ -251,23 +251,23 @@ export default function App() {
           </a>
         </div>
 
-        <div className="flex flex-1 items-center justify-center py-8">
+        <div className="flex flex-1 items-center justify-center py-3 sm:py-8">
           <div
-            className={`mx-auto flex max-w-4xl flex-col items-center text-center transition-colors duration-700 ${heroTone}`}
+            className={`mx-auto flex w-full max-w-4xl flex-col items-center text-center transition-colors duration-700 ${heroTone}`}
           >
             <div
-              className="liquid-glass mb-6 rounded-full px-4 py-2 text-sm"
+              className="liquid-glass mb-4 rounded-full px-3 py-1.5 text-xs sm:mb-6 sm:px-4 sm:py-2 sm:text-sm"
               style={{ fontFamily: 'system-ui, sans-serif' }}
             >
               Over 10,000 minds already finding their clarity
             </div>
 
-            <h1 className="max-w-4xl text-4xl leading-[1.1] sm:text-5xl md:text-7xl lg:text-[5.5rem]">
+            <h1 className="max-w-4xl text-[2.75rem] leading-[1.02] sm:text-5xl sm:leading-[1.1] md:text-7xl lg:text-[5.5rem]">
               {heroTitle}
             </h1>
 
             <p
-              className="mt-6 max-w-xl text-sm leading-relaxed opacity-85 sm:text-base"
+              className="mt-4 max-w-[20rem] text-xs leading-6 opacity-85 sm:mt-6 sm:max-w-xl sm:text-base sm:leading-relaxed"
               style={{ fontFamily: 'system-ui, sans-serif' }}
             >
               Rise above the chaos of pings, infinite scrolling, and relentless demands. Discover
@@ -276,18 +276,18 @@ export default function App() {
 
             <form
               id="early-access"
-              className="liquid-glass mt-8 flex w-full max-w-[320px] flex-col gap-2 rounded-full p-2 sm:max-w-sm sm:flex-row"
+              className="liquid-glass mt-5 flex w-full max-w-[310px] flex-col gap-2 rounded-[28px] p-2 sm:mt-8 sm:max-w-sm sm:flex-row sm:rounded-full"
               onSubmit={(event) => event.preventDefault()}
             >
               <input
-                className="min-h-11 flex-1 rounded-full bg-transparent px-4 text-sm outline-none placeholder:text-current placeholder:opacity-70"
+                className="min-h-10 flex-1 rounded-full bg-transparent px-4 text-sm outline-none placeholder:text-current placeholder:opacity-70 sm:min-h-11"
                 type="email"
                 placeholder="Your Best Email"
                 aria-label="Your best email"
                 style={{ fontFamily: 'system-ui, sans-serif' }}
               />
               <button
-                className="min-h-11 rounded-full bg-white px-5 text-sm font-semibold text-[#182C41] transition hover:bg-white/90"
+                className="min-h-10 rounded-full bg-white px-5 text-sm font-semibold text-[#182C41] transition hover:bg-white/90 sm:min-h-11"
                 type="submit"
                 style={{ fontFamily: 'system-ui, sans-serif' }}
               >
@@ -295,10 +295,10 @@ export default function App() {
               </button>
             </form>
 
-            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
+            <div className="mt-5 flex flex-wrap items-center justify-center gap-2 sm:mt-8 sm:gap-5">
               {videos.map((video, index) => (
                 <button
-                  className={`border-b-2 px-1 pb-2 text-xs transition sm:text-sm ${
+                  className={`border-b-2 px-1 pb-1.5 text-[11px] transition sm:pb-2 sm:text-sm ${
                     activeVideo === index
                       ? 'border-current opacity-100'
                       : 'border-transparent opacity-50 hover:opacity-80'
@@ -317,7 +317,7 @@ export default function App() {
         </div>
 
         <div
-          className="flex flex-wrap items-center justify-center gap-3 pb-1 text-xs text-white/70 sm:gap-4 sm:text-sm"
+          className="hidden flex-wrap items-center justify-center gap-3 pb-1 text-xs text-white/70 sm:flex sm:gap-4 sm:text-sm"
           style={{ fontFamily: 'system-ui, sans-serif' }}
         >
           {stats.map((stat, index) => (
@@ -331,7 +331,7 @@ export default function App() {
         </div>
 
         <button
-          className={`liquid-glass fixed bottom-5 right-5 z-40 flex min-h-11 items-center gap-2 rounded-full px-4 text-sm text-white transition ${
+          className={`liquid-glass fixed bottom-4 right-4 z-40 flex min-h-10 items-center gap-2 rounded-full px-3 text-xs text-white transition sm:bottom-5 sm:right-5 sm:min-h-11 sm:px-4 sm:text-sm ${
             audioBlocked || audioPlaying ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
           type="button"

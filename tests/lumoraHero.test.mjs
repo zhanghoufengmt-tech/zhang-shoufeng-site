@@ -11,6 +11,10 @@ for (const text of [
   './audio/bgm.mp3',
   'audioRef',
   'Play BGM',
+  'h-[100svh]',
+  'text-[2.75rem]',
+  'rounded-[28px]',
+  'hidden flex-wrap',
   'Golden Hour',
   'Still Water',
   'Deep Woods',
@@ -18,10 +22,12 @@ for (const text of [
   'Get Early Access',
   'isTransitioning',
 ]) {
-  assert.match(appSource, new RegExp(text), `App should include ${text}`);
+  assert.ok(appSource.includes(text), `App should include ${text}`);
 }
 
 assert.match(appSource, /<audio[^>]+autoPlay[^>]+loop/, 'App should autoplay and loop BGM');
+assert.match(appSource, /sm:rounded-full/, 'Mobile form should avoid a tall rounded-full pill');
+assert.match(appSource, /hidden flex-wrap[\s\S]+sm:flex/, 'Stats should be hidden on mobile');
 assert.doesNotMatch(appSource, /How It Works/, 'App should not include How It Works');
 assert.doesNotMatch(appSource, /Pricing/, 'App should not include Pricing');
 assert.match(cssSource, /\.liquid-glass/, 'CSS should define the liquid glass class');
