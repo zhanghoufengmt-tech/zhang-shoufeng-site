@@ -1,5 +1,5 @@
-import { Menu, X } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { Menu, Music2, Volume2, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 
 type VideoOption = {
   label: string;
@@ -35,13 +35,19 @@ const stats = [
 
 const overlayImage =
   'https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png';
+const bgmSource = './audio/bgm.mp3';
+const brandLabel = '\u6b22\u8fce';
+const heroTitle = '\u5f20\u5bff\u4e30\u4e2a\u4eba\u7f51\u7ad9';
 
 const toAnchor = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
 
 export default function App() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [activeVideo, setActiveVideo] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [audioBlocked, setAudioBlocked] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
   const isDeepWoods = activeVideo === 2;
   const heroTone = isDeepWoods ? 'text-[#182C41]' : 'text-white';
 
@@ -50,6 +56,43 @@ export default function App() {
 
     return () => {
       document.body.style.overflow = '';
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
+    }
+
+    audio.volume = 0.32;
+
+    const tryPlay = () => {
+      audio
+        .play()
+        .then(() => {
+          setAudioPlaying(true);
+          setAudioBlocked(false);
+        })
+        .catch(() => {
+          setAudioBlocked(true);
+        });
+    };
+
+    tryPlay();
+
+    const resumeOnFirstGesture = () => {
+      tryPlay();
+      window.removeEventListener('pointerdown', resumeOnFirstGesture);
+      window.removeEventListener('keydown', resumeOnFirstGesture);
+    };
+
+    window.addEventListener('pointerdown', resumeOnFirstGesture);
+    window.addEventListener('keydown', resumeOnFirstGesture);
+
+    return () => {
+      window.removeEventListener('pointerdown', resumeOnFirstGesture);
+      window.removeEventListener('keydown', resumeOnFirstGesture);
     };
   }, []);
 
@@ -63,8 +106,27 @@ export default function App() {
     window.setTimeout(() => setIsTransitioning(false), 1000);
   };
 
+  const playAudio = () => {
+    const audio = audioRef.current;
+    if (!audio) {
+      return;
+    }
+
+    audio
+      .play()
+      .then(() => {
+        setAudioPlaying(true);
+        setAudioBlocked(false);
+      })
+      .catch(() => {
+        setAudioBlocked(true);
+      });
+  };
+
   return (
     <section className="relative h-screen w-full overflow-hidden bg-black">
+      <audio ref={audioRef} src={bgmSource} autoPlay loop preload="auto" />
+
       <div className="absolute inset-0 z-0">
         {videos.map((video, index) => (
           <video
@@ -90,8 +152,8 @@ export default function App() {
 
       <div className="relative z-[2] flex h-full flex-col px-5 py-5 sm:px-8 sm:py-6 lg:px-12">
         <nav className="flex items-center justify-between">
-          <a className="text-xl italic text-white sm:text-2xl" href="/" aria-label="欢迎">
-            欢迎
+          <a className="text-xl italic text-white sm:text-2xl" href="/" aria-label={brandLabel}>
+            {brandLabel}
           </a>
 
           <div className="liquid-glass hidden items-center gap-1 rounded-full px-2 py-2 md:flex">
@@ -201,7 +263,7 @@ export default function App() {
             </div>
 
             <h1 className="max-w-4xl text-4xl leading-[1.1] sm:text-5xl md:text-7xl lg:text-[5.5rem]">
-              张寿丰个人网站
+              {heroTitle}
             </h1>
 
             <p
@@ -267,6 +329,23 @@ export default function App() {
             </div>
           ))}
         </div>
+
+        <button
+          className={`liquid-glass fixed bottom-5 right-5 z-40 flex min-h-11 items-center gap-2 rounded-full px-4 text-sm text-white transition ${
+            audioBlocked || audioPlaying ? 'opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+          type="button"
+          onClick={playAudio}
+          style={{ fontFamily: 'system-ui, sans-serif' }}
+          aria-label={audioPlaying ? 'Background music playing' : 'Play background music'}
+        >
+          {audioPlaying ? (
+            <Volume2 size={17} aria-hidden="true" />
+          ) : (
+            <Music2 size={17} aria-hidden="true" />
+          )}
+          {audioPlaying ? 'BGM playing' : 'Play BGM'}
+        </button>
       </div>
     </section>
   );
