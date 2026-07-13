@@ -1,0 +1,273 @@
+import { Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+
+type VideoOption = {
+  label: string;
+  url: string;
+};
+
+const videos: VideoOption[] = [
+  {
+    label: 'Golden Hour',
+    url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081127_0992a171-d3c6-4978-8213-0ec5df8b6d63.mp4',
+  },
+  {
+    label: 'Still Water',
+    url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_092026_dd05b805-ea0f-40b2-8c52-332b88502592.mp4',
+  },
+  {
+    label: 'Deep Woods',
+    url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_081042_df7202bf-bd80-4b2b-bbc6-1f09ba2870e9.mp4',
+  },
+  {
+    label: 'Quiet Dawn',
+    url: 'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260702_080959_4cac5234-3573-464e-a5b7-76b94b8a7d61.mp4',
+  },
+];
+
+const navLinks = ['Features', 'Community'];
+const stats = [
+  '60+ Deep Sessions',
+  '12,000+ Creators',
+  '4.8 User Satisfaction',
+  'Intentional-First Design',
+];
+
+const overlayImage =
+  'https://soft-zoom-63098134.figma.site/_assets/v11/0b4a435b2df2747593c43d7a1c9b4578f7d8d90c.png';
+
+const toAnchor = (text: string) => text.toLowerCase().replace(/\s+/g, '-');
+
+export default function App() {
+  const [activeVideo, setActiveVideo] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const isDeepWoods = activeVideo === 2;
+  const heroTone = isDeepWoods ? 'text-[#182C41]' : 'text-white';
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, []);
+
+  const switchVideo = (index: number) => {
+    if (index === activeVideo || isTransitioning) {
+      return;
+    }
+
+    setActiveVideo(index);
+    setIsTransitioning(true);
+    window.setTimeout(() => setIsTransitioning(false), 1000);
+  };
+
+  return (
+    <section className="relative h-screen w-full overflow-hidden bg-black">
+      <div className="absolute inset-0 z-0">
+        {videos.map((video, index) => (
+          <video
+            key={video.label}
+            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out ${
+              activeVideo === index ? 'opacity-100' : 'opacity-0'
+            }`}
+            src={video.url}
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
+        ))}
+      </div>
+
+      <img
+        className="train-bob pointer-events-none absolute inset-0 z-[1] h-full w-full object-cover"
+        src={overlayImage}
+        alt=""
+        aria-hidden="true"
+      />
+
+      <div className="relative z-[2] flex h-full flex-col px-5 py-5 sm:px-8 sm:py-6 lg:px-12">
+        <nav className="flex items-center justify-between">
+          <a className="text-xl italic text-white sm:text-2xl" href="/" aria-label="欢迎">
+            欢迎
+          </a>
+
+          <div className="liquid-glass hidden items-center gap-1 rounded-full px-2 py-2 md:flex">
+            {navLinks.map((link) => (
+              <a
+                className="rounded-full px-4 py-2 text-sm text-white/90 transition hover:text-white"
+                href={`#${toAnchor(link)}`}
+                key={link}
+                style={{ fontFamily: 'system-ui, sans-serif' }}
+              >
+                {link}
+              </a>
+            ))}
+            <a
+              className="rounded-full bg-white px-5 py-2 text-sm font-semibold text-[#182C41] transition hover:bg-white/90"
+              href="#early-access"
+              style={{ fontFamily: 'system-ui, sans-serif' }}
+            >
+              Get Started
+            </a>
+          </div>
+
+          <button
+            className="liquid-glass relative flex h-11 w-11 items-center justify-center rounded-full text-white md:hidden"
+            type="button"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((open) => !open)}
+          >
+            <Menu
+              className={`absolute transition duration-300 ${
+                menuOpen ? 'rotate-90 scale-75 opacity-0' : 'rotate-0 scale-100 opacity-100'
+              }`}
+              size={21}
+              aria-hidden="true"
+            />
+            <X
+              className={`absolute transition duration-300 ${
+                menuOpen ? 'rotate-0 scale-100 opacity-100' : '-rotate-90 scale-75 opacity-0'
+              }`}
+              size={21}
+              aria-hidden="true"
+            />
+          </button>
+        </nav>
+
+        <div
+          className={`fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/60 px-6 text-center backdrop-blur-sm transition duration-500 md:hidden ${
+            menuOpen ? 'pointer-events-auto opacity-100' : 'pointer-events-none opacity-0'
+          }`}
+          style={{ transitionTimingFunction: 'cubic-bezier(0.4,0,0.2,1)' }}
+        >
+          <button
+            className="absolute right-5 top-5 flex h-11 w-11 items-center justify-center rounded-full text-white"
+            type="button"
+            aria-label="Close menu"
+            onClick={() => setMenuOpen(false)}
+          >
+            <X size={24} aria-hidden="true" />
+          </button>
+
+          <div className="flex flex-col gap-6">
+            {navLinks.map((link, index) => (
+              <a
+                className={`text-3xl text-white transition duration-500 ${
+                  menuOpen ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
+                }`}
+                href={`#${toAnchor(link)}`}
+                key={link}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  fontFamily: 'system-ui, sans-serif',
+                  transitionDelay: `${100 + index * 50}ms`,
+                  transitionTimingFunction: 'cubic-bezier(0.4,0,0.2,1)',
+                }}
+              >
+                {link}
+              </a>
+            ))}
+          </div>
+
+          <a
+            className={`mt-12 rounded-full bg-white px-8 py-3 text-base font-semibold text-[#182C41] transition duration-500 ${
+              menuOpen ? 'scale-100 opacity-100' : 'scale-90 opacity-0'
+            }`}
+            href="#early-access"
+            onClick={() => setMenuOpen(false)}
+            style={{
+              fontFamily: 'system-ui, sans-serif',
+              transitionDelay: '300ms',
+              transitionTimingFunction: 'cubic-bezier(0.4,0,0.2,1)',
+            }}
+          >
+            Get Started
+          </a>
+        </div>
+
+        <div className="flex flex-1 items-center justify-center py-8">
+          <div
+            className={`mx-auto flex max-w-4xl flex-col items-center text-center transition-colors duration-700 ${heroTone}`}
+          >
+            <div
+              className="liquid-glass mb-6 rounded-full px-4 py-2 text-sm"
+              style={{ fontFamily: 'system-ui, sans-serif' }}
+            >
+              Over 10,000 minds already finding their clarity
+            </div>
+
+            <h1 className="max-w-4xl text-4xl leading-[1.1] sm:text-5xl md:text-7xl lg:text-[5.5rem]">
+              张寿丰个人网站
+            </h1>
+
+            <p
+              className="mt-6 max-w-xl text-sm leading-relaxed opacity-85 sm:text-base"
+              style={{ fontFamily: 'system-ui, sans-serif' }}
+            >
+              Rise above the chaos of pings, infinite scrolling, and relentless demands. Discover
+              how to protect your presence and create with intention.
+            </p>
+
+            <form
+              id="early-access"
+              className="liquid-glass mt-8 flex w-full max-w-[320px] flex-col gap-2 rounded-full p-2 sm:max-w-sm sm:flex-row"
+              onSubmit={(event) => event.preventDefault()}
+            >
+              <input
+                className="min-h-11 flex-1 rounded-full bg-transparent px-4 text-sm outline-none placeholder:text-current placeholder:opacity-70"
+                type="email"
+                placeholder="Your Best Email"
+                aria-label="Your best email"
+                style={{ fontFamily: 'system-ui, sans-serif' }}
+              />
+              <button
+                className="min-h-11 rounded-full bg-white px-5 text-sm font-semibold text-[#182C41] transition hover:bg-white/90"
+                type="submit"
+                style={{ fontFamily: 'system-ui, sans-serif' }}
+              >
+                Get Early Access
+              </button>
+            </form>
+
+            <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-5">
+              {videos.map((video, index) => (
+                <button
+                  className={`border-b-2 px-1 pb-2 text-xs transition sm:text-sm ${
+                    activeVideo === index
+                      ? 'border-current opacity-100'
+                      : 'border-transparent opacity-50 hover:opacity-80'
+                  }`}
+                  type="button"
+                  key={video.label}
+                  onClick={() => switchVideo(index)}
+                  disabled={isTransitioning}
+                  style={{ fontFamily: 'system-ui, sans-serif' }}
+                >
+                  {video.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div
+          className="flex flex-wrap items-center justify-center gap-3 pb-1 text-xs text-white/70 sm:gap-4 sm:text-sm"
+          style={{ fontFamily: 'system-ui, sans-serif' }}
+        >
+          {stats.map((stat, index) => (
+            <div className="flex items-center gap-3 sm:gap-4" key={stat}>
+              <span>{stat}</span>
+              {index < stats.length - 1 ? (
+                <span className="hidden text-white/35 sm:inline">|</span>
+              ) : null}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
