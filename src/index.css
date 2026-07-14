@@ -63,3 +63,15 @@ body {
     transform: scale(1.03);
   }
 }
+
+@media (max-width: 639px) {
+  .liquid-glass {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  .train-bob {
+    animation: none;
+    transform: scale(1.03);
+  }
+}

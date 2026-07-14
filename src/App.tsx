@@ -48,6 +48,7 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [audioBlocked, setAudioBlocked] = useState(false);
   const [audioPlaying, setAudioPlaying] = useState(false);
+  const currentVideo = videos[activeVideo];
   const isDeepWoods = activeVideo === 2;
   const heroTone = isDeepWoods ? 'text-[#182C41]' : 'text-white';
 
@@ -67,33 +68,7 @@ export default function App() {
 
     audio.volume = 0.32;
 
-    const tryPlay = () => {
-      audio
-        .play()
-        .then(() => {
-          setAudioPlaying(true);
-          setAudioBlocked(false);
-        })
-        .catch(() => {
-          setAudioBlocked(true);
-        });
-    };
-
-    tryPlay();
-
-    const resumeOnFirstGesture = () => {
-      tryPlay();
-      window.removeEventListener('pointerdown', resumeOnFirstGesture);
-      window.removeEventListener('keydown', resumeOnFirstGesture);
-    };
-
-    window.addEventListener('pointerdown', resumeOnFirstGesture);
-    window.addEventListener('keydown', resumeOnFirstGesture);
-
-    return () => {
-      window.removeEventListener('pointerdown', resumeOnFirstGesture);
-      window.removeEventListener('keydown', resumeOnFirstGesture);
-    };
+    setAudioBlocked(true);
   }, []);
 
   const switchVideo = (index: number) => {
@@ -125,22 +100,19 @@ export default function App() {
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden bg-black">
-      <audio ref={audioRef} src={bgmSource} autoPlay loop preload="auto" />
+      <audio ref={audioRef} src={bgmSource} loop preload="none" />
 
       <div className="absolute inset-0 z-0">
-        {videos.map((video, index) => (
-          <video
-            key={video.label}
-            className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ease-in-out ${
-              activeVideo === index ? 'opacity-100' : 'opacity-0'
-            }`}
-            src={video.url}
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
-        ))}
+        <video
+          key={currentVideo.label}
+          className="absolute inset-0 h-full w-full object-cover"
+          src={currentVideo.url}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
       </div>
 
       <img
